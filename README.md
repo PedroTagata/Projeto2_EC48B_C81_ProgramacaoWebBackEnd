@@ -19,28 +19,27 @@ Este é o Projeto 2 da disciplina **Programação Web Back-End (EC48B-C81)**. Tr
 ## Como Executar o Projeto
 
 1.  **Pré-requisitos**: Tenha o **Node.js** e o **MongoDB** instalados em sua máquina.
-2.  Visite a primeira parte do projeto : https://github.com/PedroTagata/Projeto1_EC48B_C81_ProgramacaoWebBackEnd.git.
-3.  **Clone o Repositório**:
+2.  **Clone o Repositório**:
     ```bash
     git clone https://github.com/PedroTagata/Projeto2_EC48B_C81_ProgramacaoWebBackEnd.git
     cd Projeto2_EC48B_C81_ProgramacaoWebBackEnd
     ```
-4. Istale as Dependências:
+3. Istale as Dependências:
    ```bash
    npm install
    ```
-4.Configure as Variáveis de Ambiente: Crie um arquivo .env na raiz do projeto com as seguintes variáveis (ajuste conforme sua configuração local do MongoDB):
+5.Configure as Variáveis de Ambiente: Crie um arquivo .env na raiz do projeto com as seguintes variáveis (ajuste conforme sua configuração local do MongoDB):
    ```bash
 MONGO_URI=mongodb://localhost:27017
 MONGO_DB_NAME=ecommerce_db
 SESSION_SECRET=seu_segredo_aqui
 PORT=3000
  ```
-5. Inicie o Servidor MongoDB:
+6. Inicie o Servidor MongoDB:
     ```bash
     mongod
      ```
-6.Execute a Aplicação:
+7.Execute a Aplicação:
  ```bash
 npm start
  ```

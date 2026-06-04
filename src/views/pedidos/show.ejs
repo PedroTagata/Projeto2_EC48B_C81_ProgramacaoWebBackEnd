@@ -1,0 +1,95 @@
+<%
+layout('layouts/main', { title: title, user: user });
+%>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1>Pedido #<%= pedido._id.toString().slice(-6) %></h1>
+    <% if (pedido.status !== 'entregue' && pedido.status !== 'cancelado') { %>
+        <form action="/pedidos/<%= pedido._id %>/cancelar" method="POST" 
+              onsubmit="return confirm('Cancelar este pedido?');">
+            <button type="submit" class="btn btn-danger">Cancelar Pedido</button>
+        </form>
+    <% } %>
+</div>
+
+<div class="card">
+    <div class="card-header">Informações gerais</div>
+    <div class="card-body">
+        <table class="table">
+            <tr><th>Cliente</th><td><%= pedido.clienteNome %> (<%= pedido.clienteEmail %>)</td></tr>
+            <tr><th>Data do pedido</th><td><%= new Date(pedido.dataPedido).toLocaleString('pt-BR') %></td></tr>
+            <tr><th>Status atual</th>
+                <td>
+                    <span style="
+                        <% if (pedido.status === 'pendente') { %>background: #ffc107; color: #333;<% } %>
+                        <% if (pedido.status === 'pago') { %>background: #17a2b8; color: white;<% } %>
+                        <% if (pedido.status === 'enviado') { %>background: #007bff; color: white;<% } %>
+                        <% if (pedido.status === 'entregue') { %>background: #28a745; color: white;<% } %>
+                        <% if (pedido.status === 'cancelado') { %>background: #dc3545; color: white;<% } %>
+                        padding: 0.25rem 0.5rem; border-radius: 5px;">
+                        <%= pedido.status.toUpperCase() %>
+                    </span>
+                </td>
+            </tr>
+            <tr><th>Valor total</th><td><strong>R$ <%= pedido.valorTotal.toFixed(2) %></strong></td></tr>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Itens do pedido</div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr><th>Produto</th><th>Qtd</th><th>Preço unit.</th><th>Subtotal</th></tr>
+            </thead>
+            <tbody>
+                <% pedido.itens.forEach(item => { %>
+                <tr>
+                    <td><%= item.produtoNome %></td>
+                    <td><%= item.quantidade %></td>
+                    <td>R$ <%= item.precoUnitario.toFixed(2) %></td>
+                    <td>R$ <%= item.subtotal.toFixed(2) %></td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Histórico de status</div>
+    <div class="card-body">
+        <ul>
+            <% (pedido.historicoStatus || []).forEach(hist => { %>
+                <li><strong><%= hist.status %></strong> - <%= new Date(hist.data).toLocaleString('pt-BR') %> 
+                    <% if (hist.observacao) { %>: <%= hist.observacao %><% } %>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+</div>
+
+<!-- Apenas admin ou usuário dono pode alterar status -->
+<% if (user.isAdmin || user.id == pedido.clienteId) { %>
+<div class="card">
+    <div class="card-header">Alterar status</div>
+    <div class="card-body">
+        <form action="/pedidos/<%= pedido._id %>/status" method="POST">
+            <div class="form-group">
+                <select name="status" class="form-control" required>
+                    <option value="pendente" <%= pedido.status === 'pendente' ? 'selected' : '' %>>Pendente</option>
+                    <option value="pago" <%= pedido.status === 'pago' ? 'selected' : '' %>>Pago</option>
+                    <option value="enviado" <%= pedido.status === 'enviado' ? 'selected' : '' %>>Enviado</option>
+                    <option value="entregue" <%= pedido.status === 'entregue' ? 'selected' : '' %>>Entregue</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Observação (opcional)</label>
+                <input type="text" name="observacao" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Atualizar status</button>
+        </form>
+    </div>
+</div>
+<% } %>

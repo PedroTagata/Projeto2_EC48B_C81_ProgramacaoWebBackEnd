@@ -1,0 +1,68 @@
+<%
+layout('layouts/main', { title: title, user: user });
+%>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1>Produtos</h1>
+    <a href="/produtos/novo" class="btn btn-success">➕ Novo Produto</a>
+</div>
+
+<!-- Filtros -->
+<div class="card">
+    <div class="card-header">Filtrar produtos</div>
+    <div class="card-body">
+        <form method="GET" action="/produtos" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <input type="text" name="search" placeholder="Buscar por nome..." value="<%= filtros.search || '' %>" class="form-control" style="flex: 2;">
+            <select name="categoria" class="form-control" style="flex: 1;">
+                <option value="">Todas categorias</option>
+                <% categorias.forEach(cat => { %>
+                    <option value="<%= cat %>" <%= filtros.categoria === cat ? 'selected' : '' %>><%= cat %></option>
+                <% }); %>
+            </select>
+            <input type="number" name="minPreco" placeholder="Preço min" value="<%= filtros.minPreco || '' %>" class="form-control" style="width: 120px;">
+            <input type="number" name="maxPreco" placeholder="Preço max" value="<%= filtros.maxPreco || '' %>" class="form-control" style="width: 120px;">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="/produtos" class="btn btn-secondary">Limpar</a>
+        </form>
+    </div>
+</div>
+
+<% if (produtos.length === 0) { %>
+    <div class="alert alert-danger">Nenhum produto encontrado.</div>
+<% } else { %>
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Preço</th>
+                        <th>Estoque</th>
+                        <th>Vendas</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% produtos.forEach(produto => { %>
+                        <tr>
+                            <td><%= produto._id.toString().slice(-6) %></td>
+                            <td><%= produto.nome %></td>
+                            <td><%= produto.categoria || '-' %></td>
+                            <td>R$ <%= produto.preco.toFixed(2) %></td>
+                            <td style="<%= produto.estoque < 10 ? 'color: red; font-weight: bold;' : '' %>">
+                                <%= produto.estoque %>
+                            </td>
+                            <td><%= produto.vendas || 0 %></td>
+                            <td>
+                                <a href="/produtos/<%= produto._id %>" class="btn btn-primary" style="padding: 0.25rem 0.5rem;">Ver</a>
+                                <a href="/produtos/<%= produto._id %>/editar" class="btn btn-warning" style="padding: 0.25rem 0.5rem;">Editar</a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<% } %>

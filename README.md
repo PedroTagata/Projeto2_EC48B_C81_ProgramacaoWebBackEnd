@@ -1,75 +1,64 @@
-# Projeto2_EC48B_C81_ProgramacaoWebBackEnd
-# Aluno: Pedro Henrique Tagata Ferreira RA:1884476
-Continuação do Projeto 1 da disciplina de Programação Web Back-End (EC48B-C81)
-(https://github.com/PedroTagata/Projeto1_EC48B_C81_ProgramacaoWebBackEnd.git)
+# Projeto 2 - Web App de E-commerce (AliExpress)
 
-## Como executar o projeto
-## 1. Visitar primeira parte do projeto
-Seguir os passos do projeto 1 (https://github.com/PedroTagata/Projeto1_EC48B_C81_ProgramacaoWebBackEnd.git), atualizando arquivos repetidos encotrados iguais no projeto 2
+**Aluno:** Pedro Henrique Tagata Ferreira | **RA:** 1884476
 
-## 2. Instalar dependências
-```bash
-npm install
-```
-# 3. Iniciar MongoDB
-```bash
-mongod
-```
-# 4. Executar a aplicação
-```bash
+Este é o Projeto 2 da disciplina **Programação Web Back-End (EC48B-C81)**. Trata-se da implementação de uma aplicação web completa de e-commerce, utilizando **Node.js, Express, MongoDB** e o padrão MVC, como continuação do Projeto 1.
+
+---
+
+## Funcionalidades
+
+*   **Autenticação de Usuários**: Cadastro (`/register`) e login (`/login`) com sessões HTTP.
+*   **Clientes (`/clientes`)**: Listagem, cadastro, edição e remoção (soft delete) de clientes.
+*   **Produtos (`/produtos`)**: CRUD completo, com busca textual, filtros por categoria e faixa de preço, e controle de estoque.
+*   **Pedidos (`/pedidos`)**: Criação de pedidos com múltiplos itens, rastreamento de status (pendente, pago, enviado, entregue, cancelado), histórico de alterações e relatório de vendas.
+*   **Logs de Sistema**: Registro de erros e informações em arquivos na pasta `logs/`.
+
+---
+
+## Como Executar o Projeto
+
+1.  **Pré-requisitos**: Tenha o **Node.js** e o **MongoDB** instalados em sua máquina.
+2.  Visite a primeira parte do projeto : https://github.com/PedroTagata/Projeto1_EC48B_C81_ProgramacaoWebBackEnd.git.
+3.  **Clone o Repositório**:
+    ```bash
+    git clone https://github.com/PedroTagata/Projeto2_EC48B_C81_ProgramacaoWebBackEnd.git
+    cd Projeto2_EC48B_C81_ProgramacaoWebBackEnd
+    ```
+4. Istale as Dependências:
+   ```bash
+   npm install
+   ```
+4.Configure as Variáveis de Ambiente: Crie um arquivo .env na raiz do projeto com as seguintes variáveis (ajuste conforme sua configuração local do MongoDB):
+   ```bash
+MONGO_URI=mongodb://localhost:27017
+MONGO_DB_NAME=ecommerce_db
+SESSION_SECRET=seu_segredo_aqui
+PORT=3000
+ ```
+5. Inicie o Servidor MongoDB:
+    ```bash
+    mongod
+     ```
+6.Execute a Aplicação:
+ ```bash
 npm start
-```
-# Ou com nodemon para desenvolvimento
-```bash
-npm run dev
-```
+ ```
+A aplicação estará disponivel em http://localhost:3000.
 
-## Estrutura do Projeto
-```bash
+##Estrutura do Projeto
+ ```bash
 projeto-ecommerce-web/
 ├── src/
-│   ├── db/
-│   │   └── connection.js
-│   ├── models/
-│   │   ├── Cliente.js
-│   │   ├── Produto.js
-│   │   └── Pedido.js
-│   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── clienteRoutes.js
-│   │   ├── produtoRoutes.js
-│   │   └── pedidoRoutes.js
-│   ├── middlewares/
-│   │   └── auth.js
-│   ├── utils/
-│   │   └── logger.js
-│   └── views/
-│       ├── layouts/
-│       │   └── main.ejs
-│       ├── auth/
-│       │   ├── login.ejs
-│       │   └── register.ejs
-│       ├── clientes/
-│       │   ├── index.ejs
-│       │   ├── form.ejs
-│       │   └── show.ejs
-│       ├── produtos/
-│       │   ├── index.ejs
-│       │   ├── form.ejs
-│       │   └── show.ejs
-│       ├── pedidos/
-│       │   ├── index.ejs
-│       │   ├── form.ejs
-│       │   ├── show.ejs
-│       │   ├── meus.ejs
-│       │   └── relatorio.ejs
-│       ├── dashboard.ejs
-│       └── error.ejs
-├── public/
-│   └── css/
-│       └── style.css
-├── logs/
-├── .env
+│   ├── db/            # Conexão com o MongoDB
+│   ├── models/        # Classes Cliente, Produto, Pedido
+│   ├── routes/        # Rotas da aplicação (autenticação, clientes, produtos, pedidos)
+│   ├── middlewares/   # Middleware de autenticação
+│   ├── utils/         # Logger do sistema
+│   └── views/         # Templates EJS (layouts, autenticação, CRUDs, relatórios)
+├── public/            # Arquivos estáticos (CSS)
+├── logs/              # Arquivos de log gerados pela aplicação
+├── .env               # Configurações de ambiente (não versionado)
 ├── package.json
 ├── server.js
 └── README.md

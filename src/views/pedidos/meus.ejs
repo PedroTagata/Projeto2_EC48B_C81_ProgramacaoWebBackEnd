@@ -1,0 +1,48 @@
+<%
+layout('layouts/main', { title: title, user: user });
+%>
+
+<h1>Meus Pedidos</h1>
+
+<% if (pedidos.length === 0) { %>
+    <div class="alert alert-danger">Você ainda não fez nenhum pedido.</div>
+<% } else { %>
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Data</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% pedidos.forEach(pedido => { %>
+                    <tr>
+                        <td><%= pedido._id.toString().slice(-6) %></td>
+                        <td><%= new Date(pedido.dataPedido).toLocaleDateString('pt-BR') %></td>
+                        <td>R$ <%= pedido.valorTotal.toFixed(2) %></td>
+                        <td>
+                            <span style="
+                                <% if (pedido.status === 'pendente') { %>background: #ffc107; color: #333;<% } %>
+                                <% if (pedido.status === 'pago') { %>background: #17a2b8; color: white;<% } %>
+                                <% if (pedido.status === 'enviado') { %>background: #007bff; color: white;<% } %>
+                                <% if (pedido.status === 'entregue') { %>background: #28a745; color: white;<% } %>
+                                <% if (pedido.status === 'cancelado') { %>background: #dc3545; color: white;<% } %>
+                                padding: 0.25rem 0.5rem; border-radius: 5px;">
+                                <%= pedido.status %>
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/pedidos/<%= pedido._id %>" class="btn btn-primary btn-sm">Ver detalhes</a>
+                        </td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<% } %>

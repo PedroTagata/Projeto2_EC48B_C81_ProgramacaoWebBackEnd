@@ -1,0 +1,41 @@
+<%
+layout('layouts/main', { title: title, user: user });
+%>
+
+<h1>Dashboard</h1>
+<p>Bem-vindo(a), <strong><%= user.nome %></strong>!</p>
+
+<div class="row" style="margin-top: 2rem;">
+    <div class="stat-card">
+        <div class="stat-number"></div>
+        <div class="stat-label">Gerencie seus produtos</div>
+        <a href="/produtos" class="btn btn-primary" style="margin-top: 1rem;">Ver Produtos</a>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-number"></div>
+        <div class="stat-label">Gerencie seus clientes</div>
+        <a href="/clientes" class="btn btn-primary" style="margin-top: 1rem;">Ver Clientes</a>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-number"></div>
+        <div class="stat-label">Gerencie seus pedidos</div>
+        <a href="/pedidos" class="btn btn-primary" style="margin-top: 1rem;">Ver Pedidos</a>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-number"></div>
+        <div class="stat-label">Relatórios de vendas</div>
+        <a href="/pedidos/relatorio/vendas" class="btn btn-primary" style="margin-top: 1rem;">Ver Relatórios</a>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 2rem;">
+    <div class="card-header">Ações rápidas</div>
+    <div class="card-body">
+        <a href="/produtos/novo" class="btn btn-success">➕ Novo Produto</a>
+        <a href="/clientes/novo" class="btn btn-success" style="margin-left: 1rem;">➕ Novo Cliente</a>
+        <a href="/pedidos/novo" class="btn btn-success" style="margin-left: 1rem;">🛒 Novo Pedido</a>
+    </div>
+</div>

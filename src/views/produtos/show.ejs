@@ -1,0 +1,75 @@
+<%
+layout('layouts/main', { title: title, user: user });
+%>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1><%= produto.nome %></h1>
+    <div>
+        <a href="/produtos/<%= produto._id %>/editar" class="btn btn-warning">Editar</a>
+        <form action="/produtos/<%= produto._id %>?_method=DELETE" method="POST" style="display: inline;" 
+              onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
+            <button type="submit" class="btn btn-danger">Excluir</button>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table" style="width: 100%;">
+            <tr>
+                <th style="width: 150px;">ID</th>
+                <td><%= produto._id %></td>
+            </tr>
+            <tr>
+                <th>Nome</th>
+                <td><%= produto.nome %></td>
+            </tr>
+            <tr>
+                <th>Descrição</th>
+                <td><%= produto.descricao || '-' %></td>
+            </tr>
+            <tr>
+                <th>Categoria</th>
+                <td><%= produto.categoria || '-' %></td>
+            </tr>
+            <tr>
+                <th>Preço</th>
+                <td><strong>R$ <%= produto.preco.toFixed(2) %></strong></td>
+            </tr>
+            <tr>
+                <th>Estoque</th>
+                <td>
+                    <span style="<%= produto.estoque < 10 ? 'color: red; font-weight: bold;' : '' %>">
+                        <%= produto.estoque %> unidades
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th>Vendas</th>
+                <td><%= produto.vendas || 0 %></td>
+            </tr>
+            <tr>
+                <th>Data de criação</th>
+                <td><%= produto.dataCriacao ? produto.dataCriacao.toLocaleDateString('pt-BR') : '-' %></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- Ajuste rápido de estoque -->
+<div class="card" style="margin-top: 1.5rem;">
+    <div class="card-header">Ajustar estoque</div>
+    <div class="card-body">
+        <form action="/produtos/<%= produto._id %>/estoque" method="POST" style="display: flex; gap: 1rem; align-items: flex-end;">
+            <div class="form-group" style="flex: 1;">
+                <label for="quantidade">Quantidade</label>
+                <input type="number" id="quantidade" name="quantidade" class="form-control" required>
+            </div>
+            <div>
+                <button type="submit" name="operacao" value="adicionar" class="btn btn-success">Adicionar</button>
+                <button type="submit" name="operacao" value="remover" class="btn btn-danger" 
+                        onclick="return confirm('Remover do estoque?')">➖ Remover</button>
+            </div>
+        </form>
+    </div>
+</div>

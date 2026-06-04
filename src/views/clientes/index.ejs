@@ -1,0 +1,48 @@
+<%
+layout('layouts/main', { title: title, user: user });
+%>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1>Clientes</h1>
+    <a href="/clientes/novo" class="btn btn-success">➕ Novo Cliente</a>
+</div>
+
+<% if (clientes.length === 0) { %>
+    <div class="alert alert-danger">Nenhum cliente encontrado.</div>
+<% } else { %>
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Endereço</th>
+                        <th>Data cadastro</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% clientes.forEach(cliente => { %>
+                    <tr>
+                        <td><%= cliente._id.toString().slice(-6) %></td>
+                        <td><%= cliente.nome %></td>
+                        <td><%= cliente.email %></td>
+                        <td><%= cliente.endereco || '-' %></td>
+                        <td><%= new Date(cliente.dataCadastro).toLocaleDateString('pt-BR') %></td>
+                        <td>
+                            <a href="/clientes/<%= cliente._id %>" class="btn btn-primary btn-sm">Ver</a>
+                            <a href="/clientes/<%= cliente._id %>/editar" class="btn btn-warning btn-sm">Editar</a>
+                            <form action="/clientes/<%= cliente._id %>?_method=DELETE" method="POST" style="display: inline;"
+                                  onsubmit="return confirm('Excluir cliente?');">
+                                <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<% } %>

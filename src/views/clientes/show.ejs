@@ -1,0 +1,26 @@
+<%
+layout('layouts/main', { title: title, user: user });
+%>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1><%= cliente.nome %></h1>
+    <div>
+        <a href="/clientes/<%= cliente._id %>/editar" class="btn btn-warning">Editar</a>
+        <form action="/clientes/<%= cliente._id %>?_method=DELETE" method="POST" style="display: inline;"
+              onsubmit="return confirm('Excluir cliente?');">
+            <button type="submit" class="btn btn-danger">🗑️ Excluir</button>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <tr><th>ID</th><td><%= cliente._id %></td></tr>
+            <tr><th>Nome</th><td><%= cliente.nome %></td></tr>
+            <tr><th>Email</th><td><%= cliente.email %></td></tr>
+            <tr><th>Endereço</th><td><%= cliente.endereco || '-' %></td></tr>
+            <tr><th>Cadastro</th><td><%= new Date(cliente.dataCadastro).toLocaleString('pt-BR') %></td></tr>
+        </table>
+    </div>
+</div>

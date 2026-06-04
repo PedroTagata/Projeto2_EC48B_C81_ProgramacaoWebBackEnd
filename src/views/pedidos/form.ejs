@@ -1,0 +1,72 @@
+<%
+layout('layouts/main', { title: title, user: user });
+%>
+
+<div class="card">
+    <div class="card-header">Novo Pedido</div>
+    <div class="card-body">
+        <form action="/pedidos" method="POST">
+            <div id="itens-container">
+                <div class="item-pedido" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="form-group" style="flex: 2;">
+                        <label>Produto</label>
+                        <select name="itens[0][produtoId]" class="form-control" required>
+                            <option value="">Selecione</option>
+                            <% produtos.forEach(produto => { %>
+                                <option value="<%= produto._id %>">
+                                    <%= produto.nome %> - R$ <%= produto.preco.toFixed(2) %> (estoque: <%= produto.estoque %>)
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Quantidade</label>
+                        <input type="number" name="itens[0][quantidade]" class="form-control" min="1" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="add-item" class="btn btn-secondary" style="margin-bottom: 1rem;">Adicionar outro produto</button>
+
+            <div style="margin-top: 1rem;">
+                <button type="submit" class="btn btn-primary">Finalizar Pedido</button>
+                <a href="/pedidos" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let itemCount = 1;
+    document.getElementById('add-item').addEventListener('click', function() {
+        const container = document.getElementById('itens-container');
+        const newItem = document.createElement('div');
+        newItem.className = 'item-pedido';
+        newItem.style.display = 'flex';
+        newItem.style.gap = '1rem';
+        newItem.style.marginBottom = '1rem';
+        newItem.innerHTML = `
+            <div class="form-group" style="flex: 2;">
+                <label>Produto</label>
+                <select name="itens[${itemCount}][produtoId]" class="form-control" required>
+                    <option value="">Selecione</option>
+                    <% produtos.forEach(produto => { %>
+                        <option value="<%= produto._id %>"><%= produto.nome %> - R$ <%= produto.preco.toFixed(2) %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>Quantidade</label>
+                <input type="number" name="itens[${itemCount}][quantidade]" class="form-control" min="1" required>
+            </div>
+            <button type="button" class="remove-item btn btn-danger" style="align-self: flex-end;">✖</button>
+        `;
+        container.appendChild(newItem);
+        itemCount++;
+
+        // Adicionar evento de remoção
+        newItem.querySelector('.remove-item').addEventListener('click', function() {
+            container.removeChild(newItem);
+        });
+    });
+</script>

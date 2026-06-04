@@ -1,0 +1,69 @@
+<%
+layout('layouts/main', { title: title, user: user });
+%>
+
+<h1>Relatório de Vendas</h1>
+
+<div class="card">
+    <div class="card-header">Filtrar por período</div>
+    <div class="card-body">
+        <form method="GET" action="/pedidos/relatorio/vendas" style="display: flex; gap: 1rem; align-items: flex-end;">
+            <div class="form-group">
+                <label>Data inicial</label>
+                <input type="date" name="inicio" class="form-control" value="<%= inicio %>">
+            </div>
+            <div class="form-group">
+                <label>Data final</label>
+                <input type="date" name="fim" class="form-control" value="<%= fim %>">
+            </div>
+            <button type="submit" class="btn btn-primary">Gerar</button>
+        </form>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 1.5rem;">
+    <div class="stat-card">
+        <div class="stat-number"><%= resumo.totalPedidos %></div>
+        <div class="stat-label">Pedidos realizados</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">R$ <%= resumo.totalVendas.toFixed(2) %></div>
+        <div class="stat-label">Receita total</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">R$ <%= resumo.ticketMedio.toFixed(2) %></div>
+        <div class="stat-label">Ticket médio</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Produtos mais vendidos</div>
+    <div class="card-body">
+        <% if (resumo.produtosMaisVendidos && resumo.produtosMaisVendidos.length > 0) { %>
+            <table class="table">
+                <thead>
+                    <tr><th>Produto</th><th>Quantidade vendida</th><th>Receita gerada</th></tr>
+                </thead>
+                <tbody>
+                    <% resumo.produtosMaisVendidos.forEach(prod => { %>
+                    <tr>
+                        <td><%= prod.produtoNome %></td>
+                        <td><%= prod.quantidade %></td>
+                        <td>R$ <%= prod.receita.toFixed(2) %></td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>Nenhum produto vendido no período.</p>
+        <% } %>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Período analisado</div>
+    <div class="card-body">
+        <p>De <strong><%= new Date(resumo.periodo.inicio).toLocaleDateString('pt-BR') %></strong> 
+        até <strong><%= new Date(resumo.periodo.fim).toLocaleDateString('pt-BR') %></strong></p>
+    </div>
+</div>

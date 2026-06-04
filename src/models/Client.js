@@ -12,7 +12,7 @@ class Cliente {
     }
 
     // Validar campos obrigatórios
-    validateFields(cliente) {
+    validateFields(cliente, isUpdate = false) {
         const errors = [];
         
         if (!cliente.nome || typeof cliente.nome !== 'string' || cliente.nome.trim() === '') {
@@ -25,9 +25,10 @@ class Cliente {
             errors.push('Formato de email inválido');
         }
 
-      if (!cliente.senha || cliente.senha.trim() === '') {
-    errors.push('Campo "senha" é obrigatório para cadastro');
-}
+        // Só valida senha se não for atualização (cadastro)
+        if (!isUpdate && (!cliente.senha || cliente.senha.trim() === '')) {
+            errors.push('Campo "senha" é obrigatório para cadastro');
+        }
         
         return errors;
     }
@@ -60,6 +61,7 @@ class Cliente {
             const novoCliente = {
                 nome: cliente.nome.trim(),
                 email: cliente.email.trim().toLowerCase(),
+                senha: cliente.senha, // Agora a senha é armazenada (em produção, use hash)
                 endereco: cliente.endereco || null,
                 dataCadastro: new Date(),
                 ativo: true
@@ -71,8 +73,6 @@ class Cliente {
                 id: result.insertedId, 
                 nome: cliente.nome 
             });
-         
-          senha: cliente.senha,
             
             return { 
                 success: true, 
@@ -85,16 +85,23 @@ class Cliente {
             throw error;
         }
     }
-async autenticar(email, senha) {
-    const cliente = await this.buscarPorEmail(email);
-    if (!cliente) return null;
-    
-    if (cliente.senha === senha) {
-        return cliente;
+
+    // Autenticar cliente
+    async autenticar(email, senha) {
+        try {
+            const cliente = await this.buscarPorEmail(email);
+            if (!cliente) return null;
+            
+            // Comparação direta (em produção, use bcrypt.compare)
+            if (cliente.senha === senha) {
+                return cliente;
+            }
+            return null;
+        } catch (error) {
+            logger.logException(error, 'Cliente.autenticar');
+            throw error;
+        }
     }
-    return null;
-}
-  
 
     // Buscar cliente por ID
     async buscarPorId(id) {
@@ -111,7 +118,7 @@ async autenticar(email, senha) {
             }
 
             const collection = this.getCollection();
-            const cliente = await collection.findOne({ _id: queryId });
+            const cliente = await collection.findOne({ _id: queryId, ativo: true });
 
             if (!cliente) {
                 return null;
@@ -135,7 +142,8 @@ async autenticar(email, senha) {
 
             const collection = this.getCollection();
             const cliente = await collection.findOne({ 
-                email: email.trim().toLowerCase() 
+                email: email.trim().toLowerCase(),
+                ativo: true
             });
 
             logger.logInfo('Cliente buscado por email', { email });
@@ -166,7 +174,7 @@ async autenticar(email, senha) {
         }
     }
 
-    // Atualizar dados do cliente
+    // Atualizar dados do cliente (não atualiza senha por segurança)
     async atualizarDados(id, novosDados) {
         try {
             if (!id) {

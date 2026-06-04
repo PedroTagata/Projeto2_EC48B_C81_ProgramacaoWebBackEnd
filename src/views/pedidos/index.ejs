@@ -1,0 +1,71 @@
+<%
+layout('layouts/main', { title: title, user: user });
+%>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1>Pedidos</h1>
+    <a href="/pedidos/novo" class="btn btn-success">➕ Novo Pedido</a>
+</div>
+
+<!-- Filtro por status -->
+<div class="card">
+    <div class="card-header">Filtrar por status</div>
+    <div class="card-body">
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <a href="/pedidos" class="btn <%= !statusFiltro ? 'btn-primary' : 'btn-secondary' %>">Todos</a>
+            <a href="/pedidos?status=pendente" class="btn <%= statusFiltro === 'pendente' ? 'btn-primary' : 'btn-secondary' %>">Pendente</a>
+            <a href="/pedidos?status=pago" class="btn <%= statusFiltro === 'pago' ? 'btn-primary' : 'btn-secondary' %>">Pago</a>
+            <a href="/pedidos?status=enviado" class="btn <%= statusFiltro === 'enviado' ? 'btn-primary' : 'btn-secondary' %>">Enviado</a>
+            <a href="/pedidos?status=entregue" class="btn <%= statusFiltro === 'entregue' ? 'btn-primary' : 'btn-secondary' %>">Entregue</a>
+            <a href="/pedidos?status=cancelado" class="btn <%= statusFiltro === 'cancelado' ? 'btn-primary' : 'btn-secondary' %>">Cancelado</a>
+        </div>
+    </div>
+</div>
+
+<% if (pedidos.length === 0) { %>
+    <div class="alert alert-danger">Nenhum pedido encontrado.</div>
+<% } else { %>
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Data</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% pedidos.forEach(pedido => { %>
+                        <tr>
+                            <td><%= pedido._id.toString().slice(-6) %></td>
+                            <td><%= pedido.clienteNome %></td>
+                            <td><%= pedido.dataPedido.toLocaleDateString('pt-BR') %></td>
+                            <td>R$ <%= pedido.valorTotal.toFixed(2) %></td>
+                            <td>
+                                <span style="
+                                    <% if (pedido.status === 'pendente') { %>background: #ffc107; color: #333;<% } %>
+                                    <% if (pedido.status === 'pago') { %>background: #17a2b8; color: white;<% } %>
+                                    <% if (pedido.status === 'enviado') { %>background: #007bff; color: white;<% } %>
+                                    <% if (pedido.status === 'entregue') { %>background: #28a745; color: white;<% } %>
+                                    <% if (pedido.status === 'cancelado') { %>background: #dc3545; color: white;<% } %>
+                                    padding: 0.25rem 0.5rem;
+                                    border-radius: 3px;
+                                    font-size: 0.8rem;
+                                ">
+                                    <%= pedido.status %>
+                                </span>
+                            </td>
+                            <td>
+                                <a href="/pedidos/<%= pedido._id %>" class="btn btn-primary" style="padding: 0.25rem 0.5rem;">Ver</a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<% } %>
